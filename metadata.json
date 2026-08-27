@@ -1,0 +1,6 @@
+{
+  "name": "Pressmart",
+  "description": "Pressmart Real Estate Services - Premium real estate platform in Nigeria to buy, rent, and invest in luxury properties in Lagos and Abuja.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
