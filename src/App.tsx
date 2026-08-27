@@ -112,7 +112,6 @@ export default function App() {
                   savedPropertyIds={savedPropertyIds}
                   onToggleSave={toggleSaveProperty}
                   onOpenMortgage={(prop) => setSelectedMortgageProperty(prop)}
-                  onContactAgent={handleContactAgent}
                   onOpenContact={handleOpenGeneralContact}
                 />
               }

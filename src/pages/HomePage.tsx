@@ -2,10 +2,9 @@ import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Hero } from '../components/Hero';
 import { PropertyList } from '../components/PropertyList';
-import { AgentsSection } from '../components/AgentSection';
 import { AboutSection } from '../components/AboutSection';
 import { BlogsSection } from '../components/BlogsSection';
-import { Property, Agent, SearchFilterState } from '../types';
+import { Property, SearchFilterState } from '../types';
 import { ShieldCheck, Award, Building2, Globe, ArrowRight, CheckCircle2, Calculator } from 'lucide-react';
 import { WhatsAppIcon } from '../components/WhatsAppWidget';
 
@@ -17,7 +16,6 @@ interface HomePageProps {
   savedPropertyIds: string[];
   onToggleSave: (id: string) => void;
   onOpenMortgage: (property: Property) => void;
-  onContactAgent: (agent: Agent) => void;
   onOpenContact: () => void;
 }
 
@@ -29,7 +27,6 @@ export const HomePage: React.FC<HomePageProps> = ({
   savedPropertyIds,
   onToggleSave,
   onOpenMortgage,
-  onContactAgent,
   onOpenContact
 }) => {
   const navigate = useNavigate();
@@ -150,10 +147,7 @@ export const HomePage: React.FC<HomePageProps> = ({
         </div>
       </section>
 
-      {/* 5. Our Agents Highlight */}
-      <AgentsSection onContactAgent={onContactAgent} />
-
-      {/* 6. About Section Highlight */}
+      {/* About Section Highlight */}
       <AboutSection onExploreProperties={() => navigate('/properties')} />
 
       {/* 7. Market Intelligence & Blogs */}

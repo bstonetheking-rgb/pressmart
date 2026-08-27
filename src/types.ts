@@ -1,4 +1,5 @@
 export type PropertyCategory = 
+  | 'Commercial'
   | 'Waterfront Villa'
   | 'Mansion'
   | 'Detached Duplex'
@@ -25,9 +26,11 @@ export interface Property {
   beds: number;
   baths: number;
   sqft: number;
+  landSize?: string;
   yearBuilt: number;
   image: string;
   gallery: string[];
+  videoUrl?: string;
   description: string;
   features: string[];
   isFeatured?: boolean;

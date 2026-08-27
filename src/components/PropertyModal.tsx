@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Property } from '../types';
-import { X, Bed, Bath, Maximize2, Calendar, MapPin, CheckCircle2, Phone, Mail, Share2, Heart, Calculator } from 'lucide-react';
+import { X, Bed, Bath, Maximize2, Calendar, MapPin, CheckCircle2, Phone, Mail, Share2, Heart, Calculator, Video, Image as ImageIcon, Play } from 'lucide-react';
 import { WhatsAppIcon } from './WhatsAppWidget';
 
 interface PropertyModalProps {
@@ -23,6 +23,7 @@ export const PropertyModal: React.FC<PropertyModalProps> = ({
   if (!property) return null;
 
   const [activeImageIndex, setActiveImageIndex] = useState<number>(0);
+  const [showVideo, setShowVideo] = useState<boolean>(Boolean(property.videoUrl));
   const [copied, setCopied] = useState(false);
 
   const images = property.gallery && property.gallery.length > 0 ? property.gallery : [property.image];
@@ -80,35 +81,122 @@ export const PropertyModal: React.FC<PropertyModalProps> = ({
 
         {/* Scrollable Modal Content */}
         <div className="overflow-y-auto p-6 space-y-6">
-          {/* Main Gallery Showcase */}
+          {/* Media Switcher & Showcase */}
           <div className="space-y-3">
-            <div className="relative aspect-[16/9] w-full rounded-2xl overflow-hidden bg-neutral-900 shadow-md">
-              <img
-                src={images[activeImageIndex]}
-                alt={property.title}
-                referrerPolicy="no-referrer"
-                className="w-full h-full object-cover"
-              />
-              <div className="absolute bottom-3 right-3 px-3 py-1 rounded-lg bg-black/60 backdrop-blur-md text-white text-xs font-semibold">
-                {activeImageIndex + 1} / {images.length}
-              </div>
-            </div>
+            {property.videoUrl && (
+              <div className="flex items-center gap-2 pb-1">
+                <button
+                  type="button"
+                  onClick={() => setShowVideo(false)}
+                  className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                    !showVideo
+                      ? 'bg-neutral-950 text-white shadow-xs'
+                      : 'bg-neutral-100 hover:bg-neutral-200 text-neutral-700'
+                  }`}
+                >
+                  <ImageIcon className="w-3.5 h-3.5" />
+                  <span>Photo Gallery ({images.length})</span>
+                </button>
 
-            {/* Thumbnail Strip */}
-            {images.length > 1 && (
-              <div className="flex gap-2 overflow-x-auto pb-1">
-                {images.map((img, idx) => (
-                  <button
-                    key={idx}
-                    onClick={() => setActiveImageIndex(idx)}
-                    className={`relative w-20 h-14 rounded-xl overflow-hidden shrink-0 border-2 transition-all cursor-pointer ${
-                      activeImageIndex === idx ? 'border-neutral-950 ring-2 ring-neutral-950/20' : 'border-transparent opacity-70 hover:opacity-100'
-                    }`}
-                  >
-                    <img src={img} alt="thumbnail" referrerPolicy="no-referrer" className="w-full h-full object-cover" />
-                  </button>
-                ))}
+                <button
+                  type="button"
+                  onClick={() => setShowVideo(true)}
+                  className={`inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                    showVideo
+                      ? 'bg-rose-600 text-white shadow-xs'
+                      : 'bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200'
+                  }`}
+                >
+                  <Video className="w-3.5 h-3.5" />
+                  <span>Video Tour</span>
+                </button>
               </div>
+            )}
+
+            {showVideo && property.videoUrl ? (
+              <div className="space-y-2">
+                <div className="relative aspect-[16/9] w-full rounded-2xl overflow-hidden bg-black shadow-md">
+                  {property.videoUrl.includes('drive.google.com') ? (
+                    <iframe
+                      src={property.videoUrl.replace(/\/view(\?.*)?$/, '/preview')}
+                      title={`${property.title} Video Tour`}
+                      className="w-full h-full border-0"
+                      allow="autoplay; encrypted-media; fullscreen"
+                      allowFullScreen
+                    />
+                  ) : property.videoUrl.includes('jumpshare.com') ? (
+                    <iframe
+                      src={property.videoUrl.replace('/share/', '/embed/').replace('/v/', '/embed/')}
+                      title={`${property.title} Video Tour`}
+                      className="w-full h-full border-0 bg-neutral-950"
+                      allow="autoplay; encrypted-media; fullscreen"
+                      allowFullScreen
+                    />
+                  ) : (
+                    <video
+                      src={property.videoUrl}
+                      controls
+                      autoPlay
+                      playsInline
+                      preload="auto"
+                      className="w-full h-full object-contain"
+                    >
+                      Your browser does not support HTML5 video.
+                    </video>
+                  )}
+                </div>
+                <div className="flex items-center justify-between px-1 text-xs text-neutral-500">
+                  <span>
+                    {property.videoUrl.includes('drive.google.com')
+                      ? 'Google Drive High-Res Video Tour'
+                      : property.videoUrl.includes('jumpshare.com')
+                      ? 'Jumpshare Video Tour Stream'
+                      : 'Direct MP4 Video Stream'}
+                  </span>
+                  <a
+                    href={property.videoUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-rose-600 hover:text-rose-700 font-semibold underline inline-flex items-center gap-1"
+                  >
+                    Open Full Video In New Tab
+                  </a>
+                </div>
+              </div>
+            ) : (
+              <>
+                <div className="relative aspect-[16/9] w-full rounded-2xl overflow-hidden bg-neutral-900 shadow-md">
+                  <img
+                    src={images[activeImageIndex]}
+                    alt={property.title}
+                    referrerPolicy="no-referrer"
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute bottom-3 right-3 px-3 py-1 rounded-lg bg-black/60 backdrop-blur-md text-white text-xs font-semibold">
+                    {activeImageIndex + 1} / {images.length}
+                  </div>
+                </div>
+
+                {/* Thumbnail Strip */}
+                {images.length > 1 && (
+                  <div className="flex gap-2 overflow-x-auto pb-1">
+                    {images.map((img, idx) => (
+                      <button
+                        key={idx}
+                        onClick={() => {
+                          setActiveImageIndex(idx);
+                          setShowVideo(false);
+                        }}
+                        className={`relative w-20 h-14 rounded-xl overflow-hidden shrink-0 border-2 transition-all cursor-pointer ${
+                          activeImageIndex === idx && !showVideo ? 'border-neutral-950 ring-2 ring-neutral-950/20' : 'border-transparent opacity-70 hover:opacity-100'
+                        }`}
+                      >
+                        <img src={img} alt="thumbnail" referrerPolicy="no-referrer" className="w-full h-full object-cover" />
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </>
             )}
           </div>
 
@@ -145,18 +233,30 @@ export const PropertyModal: React.FC<PropertyModalProps> = ({
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
             <div className="bg-neutral-50 p-4 rounded-2xl border border-neutral-100 text-center">
               <Bed className="w-5 h-5 text-neutral-500 mx-auto mb-1" />
-              <div className="text-base font-bold text-neutral-900">{property.beds} Bedrooms</div>
-              <div className="text-xs text-neutral-500">Suites & Guest rooms</div>
+              <div className="text-base font-bold text-neutral-900">
+                {property.type === 'Commercial' ? `${property.beds} Classrooms` : `${property.beds} Bedrooms`}
+              </div>
+              <div className="text-xs text-neutral-500">
+                {property.type === 'Commercial' ? 'Equipped Classrooms' : 'Suites & Guest rooms'}
+              </div>
             </div>
             <div className="bg-neutral-50 p-4 rounded-2xl border border-neutral-100 text-center">
               <Bath className="w-5 h-5 text-neutral-500 mx-auto mb-1" />
-              <div className="text-base font-bold text-neutral-900">{property.baths} Bathrooms</div>
-              <div className="text-xs text-neutral-500">Designer fixtures</div>
+              <div className="text-base font-bold text-neutral-900">
+                {property.baths} {property.type === 'Commercial' ? 'Restrooms' : 'Bathrooms'}
+              </div>
+              <div className="text-xs text-neutral-500">
+                {property.type === 'Commercial' ? 'Modern Facilities' : 'Designer fixtures'}
+              </div>
             </div>
             <div className="bg-neutral-50 p-4 rounded-2xl border border-neutral-100 text-center">
               <Maximize2 className="w-5 h-5 text-neutral-500 mx-auto mb-1" />
-              <div className="text-base font-bold text-neutral-900">{property.sqft.toLocaleString()} sqft</div>
-              <div className="text-xs text-neutral-500">Living space</div>
+              <div className="text-base font-bold text-neutral-900">
+                {property.landSize || `${property.sqft.toLocaleString()} sqft`}
+              </div>
+              <div className="text-xs text-neutral-500">
+                {property.landSize ? 'Prime Land Area' : 'Living space'}
+              </div>
             </div>
             <div className="bg-neutral-50 p-4 rounded-2xl border border-neutral-100 text-center">
               <Calendar className="w-5 h-5 text-neutral-500 mx-auto mb-1" />

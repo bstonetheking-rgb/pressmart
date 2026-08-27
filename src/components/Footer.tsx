@@ -69,14 +69,6 @@ export const Footer: React.FC<FooterProps> = ({ onOpenContact }) => {
               </li>
               <li>
                 <Link
-                  to="/agents"
-                  className="hover:text-white transition-colors cursor-pointer block"
-                >
-                  Our Brokers & Advisors
-                </Link>
-              </li>
-              <li>
-                <Link
                   to="/about"
                   className="hover:text-white transition-colors cursor-pointer block"
                 >

@@ -32,7 +32,6 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   const navItems = [
     { label: 'Properties', path: '/properties' },
-    { label: 'Our Agents', path: '/agents' },
     { label: 'About Us', path: '/about' },
     { label: 'Market Insights', path: '/blogs' },
     { label: 'Calculator', path: '/calculator' },

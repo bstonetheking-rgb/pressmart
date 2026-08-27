@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Property, SearchFilterState } from '../types';
-import { Bed, Bath, Maximize2, MapPin, Heart, ArrowUpRight, Filter, SlidersHorizontal, Check } from 'lucide-react';
+import { Bed, Bath, Maximize2, MapPin, Heart, ArrowUpRight, Filter, SlidersHorizontal, Video } from 'lucide-react';
 
 interface PropertyListProps {
   properties: Property[];
@@ -72,7 +72,7 @@ export const PropertyList: React.FC<PropertyListProps> = ({
     });
   }, [properties, filters, selectedTypeFilter, sortBy]);
 
-  const propertyTypes = ['All', 'Waterfront Villa', 'Mansion', 'Detached Duplex', 'Terrace Duplex', 'Penthouse'];
+  const propertyTypes = ['All', 'Commercial', 'Waterfront Villa', 'Mansion', 'Detached Duplex', 'Terrace Duplex', 'Penthouse'];
 
   const hasActiveFilters = Boolean(
     filters.location ||
@@ -198,7 +198,7 @@ export const PropertyList: React.FC<PropertyListProps> = ({
                   />
 
                   {/* Top Badges */}
-                  <div className="absolute top-4 left-4 flex flex-wrap gap-2">
+                  <div className="absolute top-4 left-4 flex flex-wrap gap-2 items-center">
                     <span className={`px-3 py-1 rounded-full text-xs font-bold tracking-wide uppercase shadow-xs ${
                       prop.status === 'Buy'
                         ? 'bg-neutral-950 text-white'
@@ -209,6 +209,12 @@ export const PropertyList: React.FC<PropertyListProps> = ({
                     <span className="px-3 py-1 rounded-full text-xs font-semibold bg-white/90 backdrop-blur-md text-neutral-900 shadow-xs">
                       {prop.type}
                     </span>
+                    {prop.videoUrl && (
+                      <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-rose-600/90 text-white backdrop-blur-md shadow-xs flex items-center gap-1">
+                        <Video className="w-3 h-3" />
+                        <span>Video Tour</span>
+                      </span>
+                    )}
                   </div>
 
                   {/* Favorite Save Button */}
@@ -217,7 +223,7 @@ export const PropertyList: React.FC<PropertyListProps> = ({
                       e.stopPropagation();
                       onToggleSave(prop.id);
                     }}
-                    className={`absolute top-4 right-4 p-2.5 rounded-full backdrop-blur-md transition-all cursor-pointer ${
+                    className={`absolute top-4 right-4 p-2.5 rounded-full backdrop-blur-md transition-all cursor-pointer z-10 ${
                       isSaved
                         ? 'bg-rose-50 text-rose-500 fill-rose-500 shadow-md'
                         : 'bg-white/80 hover:bg-white text-neutral-700 hover:text-rose-500 shadow-xs'
@@ -226,6 +232,26 @@ export const PropertyList: React.FC<PropertyListProps> = ({
                   >
                     <Heart className={`w-4 h-4 ${isSaved ? 'fill-rose-500' : ''}`} />
                   </button>
+
+                  {/* Video Play Overlay Button */}
+                  {prop.videoUrl && (
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onSelectProperty(prop);
+                      }}
+                      className="absolute inset-0 flex items-center justify-center bg-black/25 hover:bg-black/40 transition-colors group/play cursor-pointer"
+                      aria-label="Watch video tour"
+                    >
+                      <div className="w-12 h-12 rounded-full bg-rose-600/90 text-white flex items-center justify-center shadow-lg group-hover/play:scale-110 group-hover/play:bg-rose-600 transition-all">
+                        <Video className="w-6 h-6 ml-0.5" />
+                      </div>
+                      <span className="absolute bottom-12 px-3 py-1 rounded-full text-xs font-bold bg-black/70 text-white backdrop-blur-md opacity-0 group-hover/play:opacity-100 transition-opacity">
+                        Click to Watch Video Tour
+                      </span>
+                    </button>
+                  )}
 
                   {/* Price Tag Overlay at Bottom Left */}
                   <div className="absolute bottom-4 left-4">

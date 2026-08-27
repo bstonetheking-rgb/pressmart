@@ -18,7 +18,9 @@ import {
   Building,
   Sparkles,
   Check,
-  ChevronRight
+  ChevronRight,
+  Video,
+  Image as ImageIcon
 } from 'lucide-react';
 import { WhatsAppIcon } from '../components/WhatsAppWidget';
 
@@ -42,6 +44,7 @@ export const PropertyDetailPage: React.FC<PropertyDetailPageProps> = ({
 
   const property = properties.find((p) => p.id === id) || properties[0];
   const [selectedImage, setSelectedImage] = useState<string>(property?.image || '');
+  const [showVideo, setShowVideo] = useState<boolean>(Boolean(property?.videoUrl));
   const [copied, setCopied] = useState(false);
 
   // Mortgage Calculator state inside property detail
@@ -175,39 +178,126 @@ export const PropertyDetailPage: React.FC<PropertyDetailPageProps> = ({
           </div>
         </div>
 
-        {/* Gallery Showcase */}
+        {/* Media Showcase (Gallery & Video) */}
         <div className="space-y-3">
-          <div className="relative aspect-[16/9] sm:aspect-[21/9] rounded-3xl overflow-hidden bg-neutral-900 shadow-lg border border-neutral-200/80">
-            <img
-              src={selectedImage || property.image}
-              alt={property.title}
-              className="w-full h-full object-cover transition-all duration-300"
-              referrerPolicy="no-referrer"
-            />
-          </div>
+          {property.videoUrl && (
+            <div className="flex items-center gap-2 pb-1">
+              <button
+                type="button"
+                onClick={() => setShowVideo(false)}
+                className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                  !showVideo
+                    ? 'bg-neutral-950 text-white shadow-xs'
+                    : 'bg-neutral-100 hover:bg-neutral-200 text-neutral-700'
+                }`}
+              >
+                <ImageIcon className="w-4 h-4" />
+                <span>Photo Gallery ({gallery.length})</span>
+              </button>
 
-          {/* Thumbnails */}
-          {gallery.length > 1 && (
-            <div className="flex items-center gap-3 overflow-x-auto pb-2">
-              {gallery.map((img, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => setSelectedImage(img)}
-                  className={`relative w-24 h-16 rounded-xl overflow-hidden shrink-0 border-2 transition-all cursor-pointer ${
-                    (selectedImage || property.image) === img
-                      ? 'border-[#FDD835] scale-105 shadow-md'
-                      : 'border-transparent opacity-70 hover:opacity-100'
-                  }`}
-                >
-                  <img
-                    src={img}
-                    alt={`Thumbnail ${idx + 1}`}
-                    className="w-full h-full object-cover"
-                    referrerPolicy="no-referrer"
-                  />
-                </button>
-              ))}
+              <button
+                type="button"
+                onClick={() => setShowVideo(true)}
+                className={`inline-flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                  showVideo
+                    ? 'bg-rose-600 text-white shadow-xs'
+                    : 'bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200'
+                }`}
+              >
+                <Video className="w-4 h-4" />
+                <span>Watch Video Tour</span>
+              </button>
             </div>
+          )}
+
+          {showVideo && property.videoUrl ? (
+            <div className="space-y-3">
+              <div className="relative aspect-[16/9] sm:aspect-[21/9] rounded-3xl overflow-hidden bg-black shadow-lg border border-neutral-200/80">
+                {property.videoUrl.includes('drive.google.com') ? (
+                  <iframe
+                    src={property.videoUrl.replace(/\/view(\?.*)?$/, '/preview')}
+                    title={`${property.title} Video Tour`}
+                    className="w-full h-full border-0"
+                    allow="autoplay; encrypted-media; fullscreen"
+                    allowFullScreen
+                  />
+                ) : property.videoUrl.includes('jumpshare.com') ? (
+                  <iframe
+                    src={property.videoUrl.replace('/share/', '/embed/').replace('/v/', '/embed/')}
+                    title={`${property.title} Video Tour`}
+                    className="w-full h-full border-0 bg-neutral-950"
+                    allow="autoplay; encrypted-media; fullscreen"
+                    allowFullScreen
+                  />
+                ) : (
+                  <video
+                    src={property.videoUrl}
+                    controls
+                    autoPlay
+                    playsInline
+                    preload="auto"
+                    className="w-full h-full object-contain"
+                  >
+                    Your browser does not support HTML5 video.
+                  </video>
+                )}
+              </div>
+              <div className="flex items-center justify-between px-2 text-xs text-neutral-500">
+                <span>
+                  {property.videoUrl.includes('drive.google.com')
+                    ? 'Google Drive High-Definition Video Tour'
+                    : property.videoUrl.includes('jumpshare.com')
+                    ? 'Jumpshare High-Definition Video Tour'
+                    : 'Direct High-Definition MP4 Video Stream'}
+                </span>
+                <a
+                  href={property.videoUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-rose-600 hover:text-rose-700 font-semibold underline inline-flex items-center gap-1"
+                >
+                  Open Video In New Tab
+                </a>
+              </div>
+            </div>
+          ) : (
+            <>
+              <div className="relative aspect-[16/9] sm:aspect-[21/9] rounded-3xl overflow-hidden bg-neutral-900 shadow-lg border border-neutral-200/80">
+                <img
+                  src={selectedImage || property.image}
+                  alt={property.title}
+                  className="w-full h-full object-cover transition-all duration-300"
+                  referrerPolicy="no-referrer"
+                />
+              </div>
+
+              {/* Thumbnails */}
+              {gallery.length > 1 && (
+                <div className="flex items-center gap-3 overflow-x-auto pb-2">
+                  {gallery.map((img, idx) => (
+                    <button
+                      key={idx}
+                      onClick={() => {
+                        setSelectedImage(img);
+                        setShowVideo(false);
+                      }}
+                      className={`relative w-24 h-16 rounded-xl overflow-hidden shrink-0 border-2 transition-all cursor-pointer ${
+                        (selectedImage || property.image) === img && !showVideo
+                          ? 'border-[#FDD835] scale-105 shadow-md'
+                          : 'border-transparent opacity-70 hover:opacity-100'
+                      }`}
+                    >
+                      <img
+                        src={img}
+                        alt={`Thumbnail ${idx + 1}`}
+                        className="w-full h-full object-cover"
+                        referrerPolicy="no-referrer"
+                      />
+                    </button>
+                  ))}
+                </div>
+              )}
+            </>
           )}
         </div>
 
@@ -218,8 +308,12 @@ export const PropertyDetailPage: React.FC<PropertyDetailPageProps> = ({
               <Bed className="w-5 h-5" />
             </div>
             <div>
-              <div className="text-xs text-neutral-500 font-medium">Bedrooms</div>
-              <div className="text-base font-extrabold">{property.beds} En-Suite Beds</div>
+              <div className="text-xs text-neutral-500 font-medium">
+                {property.type === 'Commercial' ? 'Classrooms / Rooms' : 'Bedrooms'}
+              </div>
+              <div className="text-base font-extrabold">
+                {property.beds} {property.type === 'Commercial' ? 'Equipped Rooms' : 'En-Suite Beds'}
+              </div>
             </div>
           </div>
 
@@ -228,8 +322,12 @@ export const PropertyDetailPage: React.FC<PropertyDetailPageProps> = ({
               <Bath className="w-5 h-5" />
             </div>
             <div>
-              <div className="text-xs text-neutral-500 font-medium">Bathrooms</div>
-              <div className="text-base font-extrabold">{property.baths} Luxury Baths</div>
+              <div className="text-xs text-neutral-500 font-medium">
+                {property.type === 'Commercial' ? 'Restrooms' : 'Bathrooms'}
+              </div>
+              <div className="text-base font-extrabold">
+                {property.baths} {property.type === 'Commercial' ? 'Modern Restrooms' : 'Luxury Baths'}
+              </div>
             </div>
           </div>
 
@@ -238,8 +336,12 @@ export const PropertyDetailPage: React.FC<PropertyDetailPageProps> = ({
               <Maximize2 className="w-5 h-5" />
             </div>
             <div>
-              <div className="text-xs text-neutral-500 font-medium">Built Area</div>
-              <div className="text-base font-extrabold">{property.sqft.toLocaleString()} Sq Ft</div>
+              <div className="text-xs text-neutral-500 font-medium">
+                {property.landSize ? 'Total Land Size' : 'Built Area'}
+              </div>
+              <div className="text-base font-extrabold">
+                {property.landSize || `${property.sqft.toLocaleString()} Sq Ft`}
+              </div>
             </div>
           </div>
 
@@ -248,8 +350,8 @@ export const PropertyDetailPage: React.FC<PropertyDetailPageProps> = ({
               <Calendar className="w-5 h-5" />
             </div>
             <div>
-              <div className="text-xs text-neutral-500 font-medium">Completion</div>
-              <div className="text-base font-extrabold">{property.yearBuilt || 2024} (Brand New)</div>
+              <div className="text-xs text-neutral-500 font-medium">Built / Status</div>
+              <div className="text-base font-extrabold">{property.yearBuilt || 2024} (Ready)</div>
             </div>
           </div>
         </div>

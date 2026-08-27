@@ -74,7 +74,6 @@ export const Logo: React.FC<LogoProps> = ({
   const isDark = theme === 'dark';
   const navyTextClass = isDark ? 'text-white' : 'text-[#0B2545]';
   const subTextClass = isDark ? 'text-neutral-300' : 'text-[#0B2545]';
-  const lineClass = isDark ? 'bg-neutral-700' : 'bg-[#0B2545]/30';
 
   if (variant === 'icon') {
     return <LogoEmblem theme={theme} className={className || 'w-8 h-8'} />;
@@ -87,12 +86,8 @@ export const Logo: React.FC<LogoProps> = ({
         <div className={`text-xl sm:text-2xl font-extrabold tracking-wider ${navyTextClass} font-heading leading-tight`}>
           PRESSMART
         </div>
-        <div className={`text-[11px] sm:text-xs font-semibold tracking-[0.28em] ${subTextClass} mt-0.5 uppercase`}>
+        <div className={`text-[11px] sm:text-xs font-semibold tracking-[0.28em] ${subTextClass} mt-1 uppercase`}>
           ASSOCIATES
-        </div>
-        <div className={`w-32 sm:w-36 h-[1px] ${lineClass} my-1.5`} />
-        <div className={`text-[8px] sm:text-[9px] font-bold tracking-[0.22em] ${subTextClass} uppercase`}>
-          REAL ESTATE SERVICES
         </div>
       </div>
     );
@@ -106,12 +101,9 @@ export const Logo: React.FC<LogoProps> = ({
         <span className={`text-base sm:text-lg font-extrabold tracking-wider ${navyTextClass} font-heading leading-none`}>
           PRESSMART
         </span>
-        <div className="flex items-center gap-2 mt-1">
-          <span className={`text-[7.5px] sm:text-[8.5px] font-bold tracking-[0.2em] ${subTextClass} uppercase leading-none`}>
-            REAL ESTATE SERVICES
-          </span>
-          <div className={`h-[1px] flex-1 min-w-[20px] ${lineClass}`} />
-        </div>
+        <span className={`text-[9px] sm:text-[10px] font-semibold tracking-[0.28em] ${subTextClass} uppercase mt-1 leading-none`}>
+          ASSOCIATES
+        </span>
       </div>
     </div>
   );
