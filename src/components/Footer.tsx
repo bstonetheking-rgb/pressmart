@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ArrowRight, CheckCircle2, Shield, Heart } from 'lucide-react';
+import { ArrowRight, CheckCircle2, Shield, Heart, Award, ExternalLink } from 'lucide-react';
 import { Logo } from './Logo';
 import { WhatsAppIcon } from './WhatsAppWidget';
+import { CertificateModal } from './CertificateModal';
 
 interface FooterProps {
   onOpenContact: () => void;
@@ -11,6 +12,7 @@ interface FooterProps {
 export const Footer: React.FC<FooterProps> = ({ onOpenContact }) => {
   const [newsletterEmail, setNewsletterEmail] = useState('');
   const [subscribed, setSubscribed] = useState(false);
+  const [isCertModalOpen, setIsCertModalOpen] = useState(false);
 
   const handleNewsletterSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,10 +38,24 @@ export const Footer: React.FC<FooterProps> = ({ onOpenContact }) => {
             <p className="text-xs sm:text-sm text-neutral-400 max-w-sm leading-relaxed">
               Buy, rent, and invest in premier luxury real estate across Banana Island, Ikoyi, Victoria Island, Lekki, and Abuja.
             </p>
-            <div className="pt-2 flex items-center gap-2 text-xs text-neutral-400">
-              <Shield className="w-4 h-4 text-emerald-400" />
-              <span>LASRERA Registered & Certified Real Estate Services Brokerage</span>
+            
+            {/* Trust Badge with Certificate Trigger */}
+            <div className="pt-2 flex flex-col gap-2">
+              <div className="flex items-center gap-2 text-xs text-neutral-400">
+                <Shield className="w-4 h-4 text-emerald-400 shrink-0" />
+                <span>LASRERA Registered & Certified Real Estate Services Brokerage</span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsCertModalOpen(true)}
+                className="inline-flex items-center gap-1.5 text-xs text-[#FDD835] hover:text-[#fde26b] font-bold transition-colors cursor-pointer w-fit"
+              >
+                <Award className="w-3.5 h-3.5" />
+                <span>View Official Accreditation Certificate</span>
+                <ExternalLink className="w-3 h-3" />
+              </button>
             </div>
+
             <div className="pt-2">
               <a
                 href="https://wa.me/2347086429976?text=Hello%20Pressmart%20Real%20Estate%2C%20I%20would%20like%20to%20inquire%20about%20your%20properties."
@@ -164,6 +180,12 @@ export const Footer: React.FC<FooterProps> = ({ onOpenContact }) => {
           </div>
         </div>
       </div>
+
+      {/* Certificate Modal */}
+      <CertificateModal
+        isOpen={isCertModalOpen}
+        onClose={() => setIsCertModalOpen(false)}
+      />
     </footer>
   );
 };

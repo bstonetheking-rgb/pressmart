@@ -11,13 +11,18 @@ import {
   ChevronDown,
   ShieldCheck,
   Building,
-  Globe
+  Globe,
+  Award,
+  ZoomIn,
+  ExternalLink
 } from 'lucide-react';
 import { WhatsAppIcon } from '../components/WhatsAppWidget';
+import { CertificateModal, OFFICIAL_CERTIFICATE_URL } from '../components/CertificateModal';
 
 export const ContactPage: React.FC = () => {
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(0);
+  const [isCertModalOpen, setIsCertModalOpen] = useState(false);
 
   const [formData, setFormData] = useState({
     name: '',
@@ -347,6 +352,53 @@ export const ContactPage: React.FC = () => {
                 LASRERA License No: <strong className="text-white">LASRERA/BRK/2024/092</strong>
               </div>
             </div>
+
+            {/* Official Certification Trust Card */}
+            <div className="bg-white rounded-3xl p-6 border border-neutral-200 shadow-xs space-y-4">
+              <div className="flex items-center gap-3">
+                <div className="p-2.5 rounded-xl bg-amber-50 text-amber-800 border border-amber-200">
+                  <Award className="w-5 h-5 text-amber-700" />
+                </div>
+                <div>
+                  <h4 className="text-sm font-bold text-neutral-950">Verified Professional Accreditation</h4>
+                  <p className="text-[11px] text-neutral-500">Official legal credentials & compliance</p>
+                </div>
+              </div>
+
+              <div
+                onClick={() => setIsCertModalOpen(true)}
+                className="relative group cursor-pointer rounded-2xl overflow-hidden border-2 border-neutral-200 hover:border-[#FDD835] bg-neutral-950 p-2 transition-all"
+                title="Click to view full certificate"
+              >
+                <img
+                  src={OFFICIAL_CERTIFICATE_URL}
+                  alt="Pressmart Certificate of Accreditation"
+                  referrerPolicy="no-referrer"
+                  className="w-full h-44 object-cover object-top rounded-xl group-hover:scale-105 transition-transform duration-300"
+                />
+                <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center text-white">
+                  <div className="flex items-center gap-1.5 bg-neutral-950/90 text-[#FDD835] px-3 py-1.5 rounded-xl text-xs font-bold border border-[#FDD835]/40 shadow-lg">
+                    <ZoomIn className="w-4 h-4" />
+                    <span>Inspect Certificate</span>
+                  </div>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-between text-xs pt-1">
+                <div className="flex items-center gap-1.5 text-emerald-700 font-bold">
+                  <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                  <span>Authenticated Credential</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setIsCertModalOpen(true)}
+                  className="text-neutral-900 font-bold hover:underline inline-flex items-center gap-1 cursor-pointer"
+                >
+                  <span>Full View</span>
+                  <ExternalLink className="w-3 h-3" />
+                </button>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -392,6 +444,12 @@ export const ContactPage: React.FC = () => {
           </div>
         </div>
       </div>
+
+      {/* Certificate Modal */}
+      <CertificateModal
+        isOpen={isCertModalOpen}
+        onClose={() => setIsCertModalOpen(false)}
+      />
     </div>
   );
 };

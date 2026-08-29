@@ -189,7 +189,10 @@ export const PropertyList: React.FC<PropertyListProps> = ({
                 className="group bg-white rounded-3xl overflow-hidden border border-neutral-200/80 hover:border-neutral-300 shadow-xs hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
               >
                 {/* Property Image Container */}
-                <div className="relative aspect-[4/3] w-full overflow-hidden bg-neutral-100">
+                <div
+                  onClick={() => onSelectProperty(prop)}
+                  className="relative aspect-[4/3] w-full overflow-hidden bg-neutral-900 cursor-pointer"
+                >
                   <img
                     src={prop.image}
                     alt={prop.title}
@@ -198,7 +201,7 @@ export const PropertyList: React.FC<PropertyListProps> = ({
                   />
 
                   {/* Top Badges */}
-                  <div className="absolute top-4 left-4 flex flex-wrap gap-2 items-center">
+                  <div className="absolute top-4 left-4 flex flex-wrap gap-2 items-center z-10">
                     <span className={`px-3 py-1 rounded-full text-xs font-bold tracking-wide uppercase shadow-xs ${
                       prop.status === 'Buy'
                         ? 'bg-neutral-950 text-white'
@@ -210,8 +213,8 @@ export const PropertyList: React.FC<PropertyListProps> = ({
                       {prop.type}
                     </span>
                     {prop.videoUrl && (
-                      <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-rose-600/90 text-white backdrop-blur-md shadow-xs flex items-center gap-1">
-                        <Video className="w-3 h-3" />
+                      <span className="px-2.5 py-1 rounded-full text-xs font-bold bg-rose-600 text-white backdrop-blur-md shadow-xs flex items-center gap-1">
+                        <Video className="w-3 h-3 animate-pulse" />
                         <span>Video Tour</span>
                       </span>
                     )}
@@ -233,28 +236,8 @@ export const PropertyList: React.FC<PropertyListProps> = ({
                     <Heart className={`w-4 h-4 ${isSaved ? 'fill-rose-500' : ''}`} />
                   </button>
 
-                  {/* Video Play Overlay Button */}
-                  {prop.videoUrl && (
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        onSelectProperty(prop);
-                      }}
-                      className="absolute inset-0 flex items-center justify-center bg-black/25 hover:bg-black/40 transition-colors group/play cursor-pointer"
-                      aria-label="Watch video tour"
-                    >
-                      <div className="w-12 h-12 rounded-full bg-rose-600/90 text-white flex items-center justify-center shadow-lg group-hover/play:scale-110 group-hover/play:bg-rose-600 transition-all">
-                        <Video className="w-6 h-6 ml-0.5" />
-                      </div>
-                      <span className="absolute bottom-12 px-3 py-1 rounded-full text-xs font-bold bg-black/70 text-white backdrop-blur-md opacity-0 group-hover/play:opacity-100 transition-opacity">
-                        Click to Watch Video Tour
-                      </span>
-                    </button>
-                  )}
-
                   {/* Price Tag Overlay at Bottom Left */}
-                  <div className="absolute bottom-4 left-4">
+                  <div className="absolute bottom-4 left-4 z-10">
                     <div className="px-3.5 py-1.5 rounded-xl bg-neutral-950/90 backdrop-blur-md text-white font-extrabold text-base tracking-tight shadow-md">
                       {prop.priceFormatted}
                     </div>

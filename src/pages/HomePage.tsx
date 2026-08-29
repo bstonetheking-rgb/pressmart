@@ -1,11 +1,12 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { Hero } from '../components/Hero';
 import { PropertyList } from '../components/PropertyList';
 import { AboutSection } from '../components/AboutSection';
 import { BlogsSection } from '../components/BlogsSection';
+import { CertificateModal } from '../components/CertificateModal';
 import { Property, SearchFilterState } from '../types';
-import { ShieldCheck, Award, Building2, Globe, ArrowRight, CheckCircle2, Calculator } from 'lucide-react';
+import { ShieldCheck, Award, Building2, Globe, ArrowRight, CheckCircle2, Calculator, ExternalLink } from 'lucide-react';
 import { WhatsAppIcon } from '../components/WhatsAppWidget';
 
 interface HomePageProps {
@@ -30,6 +31,7 @@ export const HomePage: React.FC<HomePageProps> = ({
   onOpenContact
 }) => {
   const navigate = useNavigate();
+  const [isCertModalOpen, setIsCertModalOpen] = useState(false);
 
   const handleHeroSearch = (newFilters: SearchFilterState) => {
     onFilterChange(newFilters);
@@ -88,15 +90,32 @@ export const HomePage: React.FC<HomePageProps> = ({
               </div>
             </div>
 
-            <div className="flex items-start gap-4 p-4 rounded-2xl bg-neutral-50/80 border border-neutral-100">
-              <div className="p-3 rounded-xl bg-neutral-950 text-[#FDD835] shrink-0">
+            <div
+              onClick={() => setIsCertModalOpen(true)}
+              className="flex items-start gap-4 p-4 rounded-2xl bg-amber-50/40 border border-amber-200/70 hover:border-amber-300 transition-all cursor-pointer group shadow-2xs"
+              role="button"
+              tabIndex={0}
+              title="Click to view verified accreditation certificate"
+            >
+              <div className="p-3 rounded-xl bg-neutral-950 text-[#FDD835] shrink-0 group-hover:scale-105 transition-transform">
                 <Award className="w-6 h-6" />
               </div>
               <div>
-                <h4 className="text-sm font-bold text-neutral-950">LASRERA Certified</h4>
+                <div className="flex items-center gap-1.5">
+                  <h4 className="text-sm font-bold text-neutral-950 group-hover:text-amber-900 transition-colors">
+                    Certified Brokerage
+                  </h4>
+                  <span className="text-[10px] font-extrabold bg-[#FDD835] text-neutral-950 px-1.5 py-0.5 rounded">
+                    Verified
+                  </span>
+                </div>
                 <p className="text-xs text-neutral-600 mt-1 leading-relaxed">
-                  Fully licensed real estate services brokerage compliant with state regulatory frameworks.
+                  Fully licensed real estate services brokerage. Click to inspect our verified certificate.
                 </p>
+                <div className="mt-1 text-[11px] font-bold text-amber-800 group-hover:underline inline-flex items-center gap-1">
+                  <span>View Official Certificate</span>
+                  <ExternalLink className="w-3 h-3" />
+                </div>
               </div>
             </div>
           </div>
@@ -185,6 +204,12 @@ export const HomePage: React.FC<HomePageProps> = ({
           </div>
         </div>
       </section>
+
+      {/* Certificate Lightbox Modal */}
+      <CertificateModal
+        isOpen={isCertModalOpen}
+        onClose={() => setIsCertModalOpen(false)}
+      />
     </div>
   );
 };

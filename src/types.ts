@@ -1,5 +1,6 @@
 export type PropertyCategory = 
   | 'Commercial'
+  | 'Land'
   | 'Waterfront Villa'
   | 'Mansion'
   | 'Detached Duplex'

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   ShieldCheck,
@@ -12,15 +12,21 @@ import {
   Lock,
   ArrowRight,
   Sparkles,
-  PhoneCall
+  PhoneCall,
+  ZoomIn,
+  ExternalLink,
+  FileCheck2
 } from 'lucide-react';
 import { WhatsAppIcon } from '../components/WhatsAppWidget';
+import { CertificateModal, OFFICIAL_CERTIFICATE_URL } from '../components/CertificateModal';
 
 interface AboutPageProps {
   onOpenContact: () => void;
 }
 
 export const AboutPage: React.FC<AboutPageProps> = ({ onOpenContact }) => {
+  const [isCertModalOpen, setIsCertModalOpen] = useState(false);
+
   const milestones = [
     { number: '₦450B+', label: 'Transaction Volume Brokered across Lagos & Abuja' },
     { number: '100%', label: 'Clean Title Guarantee on Every Single Listing' },
@@ -184,6 +190,100 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenContact }) => {
           </div>
         </div>
 
+        {/* Official Accreditation & Certificate Showcase */}
+        <div className="bg-gradient-to-br from-neutral-900 via-neutral-950 to-neutral-900 text-white rounded-3xl p-6 sm:p-10 border border-neutral-800 shadow-2xl relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-[#FDD835]/10 rounded-full blur-3xl pointer-events-none" />
+          
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
+            {/* Left: Certificate Details & Trust Highlights */}
+            <div className="lg:col-span-7 space-y-6">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#FDD835]/20 text-[#FDD835] text-xs font-bold uppercase tracking-wider">
+                <FileCheck2 className="w-4 h-4" />
+                Verified Legal Credential
+              </div>
+
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-white tracking-tight">
+                Official Professional Accreditation & Verified Certification
+              </h2>
+
+              <p className="text-neutral-300 text-xs sm:text-sm leading-relaxed">
+                Trust and regulatory compliance are the bedrock of Pressmart Real Estate Services. Our official certificate of accreditation guarantees that every advisory mandate, land verification, and transaction escrow adheres to the highest statutory standards in Nigeria.
+              </p>
+
+              {/* Compliance Badges */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                {[
+                  'Certified Real Estate Practitioner',
+                  'Registered Corporate Entity',
+                  'Verified C of O & Deed Authentication',
+                  'Client Escrow & Title Protection Guarantee'
+                ].map((item, idx) => (
+                  <div key={idx} className="flex items-center gap-2.5 text-xs text-neutral-200">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />
+                    <span className="font-semibold">{item}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="pt-2 flex flex-wrap items-center gap-4">
+                <button
+                  type="button"
+                  onClick={() => setIsCertModalOpen(true)}
+                  className="px-6 py-3 bg-[#FDD835] hover:bg-[#FBC02D] text-neutral-950 font-bold text-xs sm:text-sm rounded-xl transition-all shadow-md flex items-center gap-2 cursor-pointer"
+                >
+                  <ZoomIn className="w-4 h-4" />
+                  <span>Inspect High-Resolution Certificate</span>
+                </button>
+                <a
+                  href={OFFICIAL_CERTIFICATE_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-5 py-3 bg-neutral-800 hover:bg-neutral-700 text-neutral-200 font-semibold text-xs sm:text-sm rounded-xl transition-all flex items-center gap-2"
+                >
+                  <span>Open Full Document</span>
+                  <ExternalLink className="w-3.5 h-3.5" />
+                </a>
+              </div>
+            </div>
+
+            {/* Right: Framed Certificate Display Card */}
+            <div className="lg:col-span-5 flex justify-center">
+              <div
+                onClick={() => setIsCertModalOpen(true)}
+                className="relative group cursor-pointer w-full max-w-sm rounded-2xl p-3 bg-neutral-800/80 border-2 border-[#FDD835]/50 shadow-2xl hover:border-[#FDD835] transition-all duration-300 transform hover:-translate-y-1"
+                title="Click to view full certificate"
+              >
+                {/* Certificate Frame with Image */}
+                <div className="relative rounded-xl overflow-hidden bg-neutral-950 aspect-[3/4] flex items-center justify-center">
+                  <img
+                    src={OFFICIAL_CERTIFICATE_URL}
+                    alt="Official Pressmart Accreditation Certificate"
+                    referrerPolicy="no-referrer"
+                    className="w-full h-full object-contain p-2 transition-transform duration-300 group-hover:scale-105"
+                  />
+                  
+                  {/* Hover Overlay */}
+                  <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center gap-2 text-white">
+                    <ZoomIn className="w-8 h-8 text-[#FDD835]" />
+                    <span className="text-xs font-bold bg-neutral-950/90 px-3 py-1 rounded-full text-[#FDD835] border border-[#FDD835]/40">
+                      Click to Enlarge Certificate
+                    </span>
+                  </div>
+                </div>
+
+                {/* Badge Bottom Footer */}
+                <div className="mt-3 flex items-center justify-between px-1 text-xs">
+                  <div className="flex items-center gap-1.5 text-emerald-400 font-bold">
+                    <ShieldCheck className="w-4 h-4" />
+                    <span>Verified Authenticity</span>
+                  </div>
+                  <span className="text-[11px] text-neutral-400 font-mono">Pressmart Certificate</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
         {/* 4 Core Pillars */}
         <div className="space-y-8">
           <div className="text-center max-w-2xl mx-auto space-y-2">
@@ -257,6 +357,12 @@ export const AboutPage: React.FC<AboutPageProps> = ({ onOpenContact }) => {
           </div>
         </div>
       </section>
+
+      {/* Certificate Lightbox Modal */}
+      <CertificateModal
+        isOpen={isCertModalOpen}
+        onClose={() => setIsCertModalOpen(false)}
+      />
     </div>
   );
 };

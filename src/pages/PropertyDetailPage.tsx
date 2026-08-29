@@ -229,6 +229,19 @@ export const PropertyDetailPage: React.FC<PropertyDetailPageProps> = ({
                     allow="autoplay; encrypted-media; fullscreen"
                     allowFullScreen
                   />
+                ) : property.videoUrl.endsWith('.gif') || property.videoUrl.includes('.gif') ? (
+                  <div className="w-full h-full relative flex items-center justify-center bg-black">
+                    <img
+                      src={property.videoUrl}
+                      alt={`${property.title} Video Inspection Tour`}
+                      referrerPolicy="no-referrer"
+                      className="w-full h-full object-contain"
+                    />
+                    <div className="absolute top-4 right-4 px-3.5 py-1.5 rounded-full bg-black/75 text-white text-xs font-bold backdrop-blur-md flex items-center gap-2 border border-white/20">
+                      <span className="w-2.5 h-2.5 rounded-full bg-rose-500 animate-ping" />
+                      <span>Live Video Inspection Tour</span>
+                    </div>
+                  </div>
                 ) : (
                   <video
                     src={property.videoUrl}
